@@ -18,5 +18,5 @@ docker run -d --name registry-cli --network registry \
     -e TRAVIS_JOB_ID \
     -e TRAVIS_BRANCH \
     -e TRAVIS_COMMIT \
-    -e GIT_COMMITTED_AT \
+    -e GIT_COMMITTED_AT="" \
     "${TRAVIS_REPO_SLUG}" -f /dev/null
