@@ -14,5 +14,5 @@ docker run -d --name registry-cli --network registry \
     -e TRAVIS="${TRAVIS}" \
     -e TRAVIS_PULL_REQUEST="${TRAVIS_PULL_REQUEST}" \
     -e TRAVIS_JOB_ID="${TRAVIS_JOB_ID}" \
-    -e TRAVIS_BRANCH="${TRAVIS_BRANCH }" \
+    -e TRAVIS_BRANCH="${TRAVIS_BRANCH}" \
     "${TRAVIS_REPO_SLUG}" -f /dev/null
