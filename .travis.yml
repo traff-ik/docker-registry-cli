@@ -28,7 +28,7 @@ script:
   - docker exec registry-cli composer test:functional
 
 after_script:
-  - docker exec registry-cli cc-test-reporter after-build --debug -t clover
+  - docker exec registry-cli cc-test-reporter after-build -t clover
 
 deploy:
   skip_cleanup: true
