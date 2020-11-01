@@ -10,14 +10,15 @@ services:
   php:
     build:
       context: .
-      dockerfile: Dockerfile
-    entrypoint: ["tail"]
-    command: ["-f", "/dev/null"]
+      dockerfile: docker/Dockerfile.dev
+    command: ["tail", "-f", "/dev/null"]
     networks:
       - registry
     volumes:
       - ./composer.json:/usr/lib/registry/composer.json:delegated
       - ./composer.lock:/usr/lib/registry/composer.lock:delegated
+      - ./phpunit.xml.dist:/usr/lib/registry/phpunit.xml:delegated
+      - ./phpcs.xml.dist:/usr/lib/registry/phpcs.xml:delegated
       - ./src:/usr/lib/registry/src:delegated
       - ./bin:/usr/lib/registry/bin:delegated
       - ./tests:/usr/lib/registry/tests:delegated

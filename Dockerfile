@@ -15,8 +15,7 @@ COPY ./docker/php/php.ini "${PHP_INI_DIR}"/php.ini
 RUN install-php-extensions \
     bcmath \
     gmp \
-    parallel \
-    xdebug
+    parallel
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php composer-setup.php --install-dir=/usr/bin --filename=composer && \
@@ -26,7 +25,7 @@ WORKDIR /usr/lib/registry
 
 COPY composer.json composer.lock ./
 RUN composer check-platform-reqs \
-    && composer install \
+    && composer install --no-dev \
     && composer clear-cache
 
 COPY bin/ ./bin

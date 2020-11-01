@@ -1,0 +1,28 @@
+sudo: true
+dist: trusty
+
+services:
+  - docker
+
+before_install:
+  - docker build --no-cache -t ${TRAVIS_REPO_SLUG} .
+  - docker images
+  - bash travis/docker_run.sh
+
+install:
+  - docker exec registry-cli composer install
+
+before_script:
+  - docker pull alpine && docker tag alpine localhost:5000/alpine:test && docker push localhost:5000/alpine:test
+
+script:
+  - docker exec registry-cli composer test:code-syle
+  - docker exec registry-cli composer test:unit
+  - docker exec registry-cli composer test:functional
+
+deploy:
+  skip_cleanup: true
+  provider: script
+  script: bash travis/deploy_master.sh
+  on:
+    branch: master

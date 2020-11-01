@@ -2,6 +2,12 @@
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP_CodeSniffer">
     <description>App coding standards.</description>
 
+    <exclude-pattern>*/*.dist</exclude-pattern>
+
+    <file>./bin/</file>
+    <file>./src/</file>
+    <file>./tests/</file>
+
     <arg name="colors"/>
     <arg name="parallel" value="75"/>
     <arg value="np"/>

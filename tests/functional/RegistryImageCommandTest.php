@@ -27,7 +27,7 @@ class RegistryImageCommandTest extends AbstractRegistryCommand
      */
     public function testDeleteTag(): \Generator
     {
-        $image_name = 'alpine:latest';
+        $image_name = 'alpine:test';
         $process = $this->createProcess('-r', self::REGISTRY_URL, '-i', $image_name, '-d', '-v');
 
         yield $process->start();
@@ -37,7 +37,7 @@ class RegistryImageCommandTest extends AbstractRegistryCommand
         yield $process->join();
 
         $contains = [
-            '[INFO] Deleting the image alpine:latest',
+            '[INFO] Deleting the image alpine:test',
             '[DEBUG] Getting digest',
             '[DEBUG] Got digest',
             '[INFO] Request was succeeded'
