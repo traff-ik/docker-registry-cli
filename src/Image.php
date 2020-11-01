@@ -13,9 +13,6 @@ declare(strict_types=1);
 
 namespace Traff\Registry;
 
-use Traff\Registry\Interfaces\ImageInterface;
-use Traff\Registry\Interfaces\ImageTagInterface;
-
 /**
  * Class Image.
  *
@@ -30,7 +27,7 @@ final class Image implements ImageInterface
      * Image constructor.
      *
      * @param string                                            $name Image name.
-     * @param \Traff\Registry\Interfaces\ImageTagInterface|null $tag  Image tag.
+     * @param \Traff\Registry\ImageTagInterface|null $tag  Image tag.
      *
      */
     public function __construct(string $name, ?ImageTagInterface $tag = null)

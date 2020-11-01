@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Traff\Registry;
 
-use Traff\Registry\Interfaces\ImageTagInterface;
-
 /**
  * Class ImageTag.
  *

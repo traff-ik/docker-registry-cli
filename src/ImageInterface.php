@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Traff\Registry\Interfaces;
+namespace Traff\Registry;
 
 /**
  * Interface ImageInterface.
@@ -30,7 +30,7 @@ interface ImageInterface
     /**
      * Return image tag if specified.
      *
-     * @return \Traff\Registry\Interfaces\ImageTagInterface|null
+     * @return \Traff\Registry\ImageTagInterface|null
      */
     public function getTag(): ?ImageTagInterface;
 
@@ -40,7 +40,7 @@ interface ImageInterface
      * This method MUST retain the state of the current instance, and return
      * an instance that contains the specified tag.
      *
-     * @param \Traff\Registry\Interfaces\ImageTagInterface $tag
+     * @param \Traff\Registry\ImageTagInterface $tag
      *
      * @return $this
      */

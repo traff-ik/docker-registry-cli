@@ -15,7 +15,7 @@ namespace Traff\Registry;
 
 use Amp\Promise;
 use Psr\Log\LoggerInterface;
-use Traff\Registry\Interfaces\ImageFactoryInterface;
+use Traff\Registry\Factory\ImageFactoryInterface;
 
 use function Amp\call;
 

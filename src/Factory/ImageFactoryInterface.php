@@ -11,7 +11,10 @@
 
 declare(strict_types=1);
 
-namespace Traff\Registry\Interfaces;
+namespace Traff\Registry\Factory;
+
+use Traff\Registry\ImageInterface;
+use Traff\Registry\ImageTagInterface;
 
 /**
  * Interface ImageFactoryInterface.

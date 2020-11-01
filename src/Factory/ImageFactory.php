@@ -15,9 +15,8 @@ namespace Traff\Registry\Factory;
 
 use Traff\Registry\Image;
 use Traff\Registry\ImageTag;
-use Traff\Registry\Interfaces\ImageFactoryInterface;
-use Traff\Registry\Interfaces\ImageInterface;
-use Traff\Registry\Interfaces\ImageTagInterface;
+use Traff\Registry\ImageInterface;
+use Traff\Registry\ImageTagInterface;
 
 /**
  * Class ImageFactory.
@@ -32,7 +31,7 @@ final class ImageFactory implements ImageFactoryInterface
      * @param string      $image_name Image name.
      * @param string|null $tag        Image tag name.
      *
-     * @return \Traff\Registry\Interfaces\ImageInterface
+     * @return \Traff\Registry\ImageInterface
      */
     public function createImage(string $image_name, ?string $tag = null): ImageInterface
     {
@@ -49,7 +48,7 @@ final class ImageFactory implements ImageFactoryInterface
      * @param string      $name   Tag name.
      * @param string|null $digest Tag digest from the registry.
      *
-     * @return \Traff\Registry\Interfaces\ImageTagInterface
+     * @return \Traff\Registry\ImageTagInterface
      */
     public function createTag(string $name, ?string $digest = null): ImageTagInterface
     {

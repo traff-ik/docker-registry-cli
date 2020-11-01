@@ -15,7 +15,7 @@ namespace Traff\Registry\Tests\Unit;
 
 use Traff\Registry\Image;
 use Mockery as m;
-use Traff\Registry\Interfaces\ImageTagInterface;
+use Traff\Registry\ImageTagInterface;
 
 /**
  * Class ImageTest.

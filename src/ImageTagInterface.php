@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Traff\Registry\Interfaces;
+namespace Traff\Registry;
 
 /**
  * Interface ImageTagInterface.
