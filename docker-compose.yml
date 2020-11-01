@@ -3,12 +3,18 @@ version: "3.8"
 volumes:
   vendor-data:
 
-services:
+networks:
   registry:
+
+services:
+  php:
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["tail", "-f", "/dev/null"]
+    entrypoint: ["tail"]
+    command: ["-f", "/dev/null"]
+    networks:
+      - registry
     volumes:
       - ./composer.json:/usr/lib/registry/composer.json:delegated
       - ./composer.lock:/usr/lib/registry/composer.lock:delegated
@@ -16,3 +22,10 @@ services:
       - ./bin:/usr/lib/registry/bin:delegated
       - ./tests:/usr/lib/registry/tests:delegated
       - vendor-data:/usr/lib/registry/vendor
+
+  registry:
+    image: registry:2
+    ports:
+      - 5000:5000
+    networks:
+      - registry
