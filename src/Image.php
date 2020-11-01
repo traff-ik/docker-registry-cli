@@ -26,22 +26,38 @@ final class Image implements ImageInterface
 
     private ?ImageTagInterface $tag;
 
+    /**
+     * Image constructor.
+     *
+     * @param string                                            $name Image name.
+     * @param \Traff\Registry\Interfaces\ImageTagInterface|null $tag  Image tag.
+     *
+     */
     public function __construct(string $name, ?ImageTagInterface $tag = null)
     {
         $this->name = $name;
         $this->tag = $tag;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getTag(): ?ImageTagInterface
     {
         return $this->tag;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function withTag(ImageTagInterface $tag): ImageInterface
     {
         $new = clone $this;
@@ -50,6 +66,9 @@ final class Image implements ImageInterface
         return $new;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function __toString(): string
     {
         return null !== $this->getTag() ? \sprintf('%s:%s', $this->getName(), $this->getTag()) : $this->getName();

@@ -20,11 +20,36 @@ namespace Traff\Registry\Interfaces;
  */
 interface ImageInterface
 {
+    /**
+     * Return image name.
+     *
+     * @return string
+     */
     public function getName(): string;
 
+    /**
+     * Return image tag if specified.
+     *
+     * @return \Traff\Registry\Interfaces\ImageTagInterface|null
+     */
     public function getTag(): ?ImageTagInterface;
 
+    /**
+     * Return an instance with the specified tag.
+     *
+     * This method MUST retain the state of the current instance, and return
+     * an instance that contains the specified tag.
+     *
+     * @param \Traff\Registry\Interfaces\ImageTagInterface $tag
+     *
+     * @return $this
+     */
     public function withTag(ImageTagInterface $tag): self;
 
+    /**
+     * Return an instance string representation.
+     *
+     * @return string
+     */
     public function __toString(): string;
 }

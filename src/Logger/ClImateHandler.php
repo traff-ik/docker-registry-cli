@@ -18,6 +18,7 @@ namespace Traff\Registry\Logger;
 use League\CLImate\Logger as CLImateLogger;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Logger;
+use Psr\Log\InvalidArgumentException;
 use Psr\Log\LogLevel;
 
 /**
@@ -40,6 +41,9 @@ class ClImateHandler extends AbstractProcessingHandler
 
     private CLImateLogger $logger;
 
+    /**
+     * @inheritDoc
+     */
     public function __construct(CLImateLogger $logger, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
@@ -47,15 +51,25 @@ class ClImateHandler extends AbstractProcessingHandler
         $this->logger = $logger;
     }
 
+    /**
+     * @inheritDoc
+     */
     protected function write(array $record): void
     {
         $this->logger->log($this->convertLogLevel($record['level']), $record['formatted']);
     }
 
+    /**
+     * Converts monolog log level to the psr log level.
+     *
+     * @param int $level Monolog log level.
+     *
+     * @return string
+     */
     private function convertLogLevel(int $level): string
     {
         if (! isset(self::LEVELS[$level])) {
-            throw new \InvalidArgumentException(\sprintf('Invalid log level %s', $level));
+            throw new InvalidArgumentException(\sprintf('Invalid log level %s', $level));
         }
 
         return self::LEVELS[$level];

@@ -20,11 +20,36 @@ namespace Traff\Registry\Interfaces;
  */
 interface ImageTagInterface
 {
+    /**
+     * Return tag name.
+     *
+     * @return string
+     */
     public function getName(): string;
 
-    public function setDigest(string $digest): self;
+    /**
+     * Return an instance with specified tag digest.
+     *
+     * This method MUST retain the state of the current instance, and return
+     * an instance that contains the specified tag digest.
+     *
+     * @param string $digest Tag digest from registry.
+     *
+     * @return $this
+     */
+    public function withDigest(string $digest): self;
 
+    /**
+     * Return specified tag digest.
+     *
+     * @return string|null
+     */
     public function getDigest(): ?string;
 
+    /**
+     * Tag to string representation.
+     *
+     * @return string
+     */
     public function __toString(): string;
 }

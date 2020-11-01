@@ -98,8 +98,8 @@ final class Registry
 
                 $this->logger->info('Request was succeeded');
 
-                $image->getTag()->setDigest($tag_digest);
-                return $image;
+                $tag = $image->getTag()->withDigest($tag_digest);
+                return $image->withTag($tag);
             }
         );
     }

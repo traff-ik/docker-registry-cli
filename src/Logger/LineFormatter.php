@@ -20,6 +20,9 @@ namespace Traff\Registry\Logger;
  */
 class LineFormatter extends \Monolog\Formatter\LineFormatter
 {
+    /**
+     * @inheritDoc
+     */
     public function __construct(
         ?string $format = null,
         ?string $dateFormat = null,
@@ -29,11 +32,14 @@ class LineFormatter extends \Monolog\Formatter\LineFormatter
         parent::__construct($format, $dateFormat, $allowInlineLineBreaks, $ignoreEmptyContextAndExtra);
     }
 
+    /**
+     * @inheritDoc
+     */
     public function format(array $record): string
     {
         foreach ($record['context'] as $key => $value) {
             $placeholder = \sprintf('{%s}', $key);
-            if (false !== $record['message']) {
+            if (false !== \strpos($record['message'], $placeholder)) {
                 $record['message'] = \str_replace($placeholder, $value, $record['message']);
                 unset($record['context'][$key]);
             }

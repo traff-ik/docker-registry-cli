@@ -28,28 +28,49 @@ final class ImageTag implements ImageTagInterface
 
     private string $name;
 
+    /**
+     * ImageTag constructor.
+     *
+     * @param string      $name   Tag name.
+     * @param string|null $digest Tag digest from registry.
+     *
+     */
     public function __construct(string $name, ?string $digest = null)
     {
         $this->name = $name;
         $this->digest = $digest;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    public function setDigest(string $digest): ImageTagInterface
+    /**
+     * @inheritDoc
+     */
+    public function withDigest(string $digest): ImageTagInterface
     {
-        $this->digest = $digest;
-        return $this;
+        $new = clone $this;
+        $new->digest = $digest;
+
+        return $new;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getDigest(): ?string
     {
         return $this->digest;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function __toString(): string
     {
         return $this->name;
