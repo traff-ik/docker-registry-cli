@@ -12,7 +12,7 @@ before_install:
   - docker build --no-cache -t ${TRAVIS_REPO_SLUG} .
   - docker images
   - bash travis/docker_run.sh
-  - bnash travis/code_climate.sh
+  - bash travis/code_climate.sh
 
 install:
   - docker exec registry-cli composer install
