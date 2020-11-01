@@ -4,3 +4,4 @@
 /build/
 clover.xml
 .phpunit.result*
+cc-test-reporter

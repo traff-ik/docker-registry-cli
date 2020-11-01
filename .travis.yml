@@ -9,29 +9,26 @@ services:
   - docker
 
 before_install:
-  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-  - chmod +x ./cc-test-reporter
   - docker build --no-cache -t ${TRAVIS_REPO_SLUG} .
   - docker images
   - bash travis/docker_run.sh
+  - bnash travis/code_climate.sh
 
 install:
   - docker exec registry-cli composer install
   - docker exec registry-cli install-php-extensions xdebug
 
 before_script:
-  - ./cc-test-reporter before-build
+  - docker exec registry-cli cc-test-reporter before-build
   - docker pull alpine && docker tag alpine localhost:5000/alpine:test && docker push localhost:5000/alpine:test
 
 script:
   - docker exec registry-cli composer code-style
   - docker exec registry-cli composer test:with-coverage
   - docker exec registry-cli composer test:functional
-  - docker cp registry-cli:/usr/lib/registry/clover.xml .
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT; fi
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code ${TRAVIS_TEST_RESULT}
+  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker exec registry-cli cc-test-reporter after-build -t clover --exit-code $TRAVIS_TEST_RESULT; fi
 
 deploy:
   skip_cleanup: true
