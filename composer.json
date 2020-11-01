@@ -31,7 +31,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Traff\\Registry\\Tests\\": "tests/"
+      "Traff\\Registry\\Tests\\Functional\\": "tests/functional/",
+      "Traff\\Registry\\Tests\\Unit\\": "tests/unit/"
     }
   },
   "scripts": {
