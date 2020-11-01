@@ -15,7 +15,8 @@ COPY ./docker/php/php.ini "${PHP_INI_DIR}"/php.ini
 RUN install-php-extensions \
     bcmath \
     gmp \
-    parallel
+    parallel \
+    xdebug
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
     php composer-setup.php --install-dir=/usr/bin --filename=composer && \
