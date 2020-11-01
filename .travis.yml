@@ -16,7 +16,7 @@ before_script:
   - docker pull alpine && docker tag alpine localhost:5000/alpine:test && docker push localhost:5000/alpine:test
 
 script:
-  - docker exec registry-cli composer test:code-syle
+  - docker exec registry-cli composer code-style
   - docker exec registry-cli composer test:unit
   - docker exec registry-cli composer test:functional
 
