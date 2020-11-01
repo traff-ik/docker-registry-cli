@@ -22,9 +22,13 @@
     ],
     "minimum-stability": "stable",
     "autoload": {
-      "Traff\\Registry\\": "src/"
+      "psr-4": {
+        "Traff\\Registry\\": "src/"
+      }
     },
     "autoload-dev": {
-      "Traff\\Registry\\Tests": "tests/"
+      "psr-4": {
+        "Traff\\Registry\\Tests\\": "tests/"
+      }
     }
 }
