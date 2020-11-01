@@ -48,7 +48,7 @@
     "test": "phpunit",
     "test:unit": "phpunit --testsuite unit",
     "test:functional": "phpunit --testsuite functional",
-    "test:with-coverage": "phpunit --coverage-text --colors=never",
+    "test:with-coverage": "phpunit --testsuite unit --coverage-clover clover.xml",
     "code-style": "./vendor/bin/phpcs",
     "code-style:fix": "./vendor/bin/phpcbf"
   }
