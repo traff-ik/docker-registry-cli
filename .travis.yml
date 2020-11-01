@@ -19,7 +19,7 @@ install:
   - docker exec registry-cli install-php-extensions xdebug
 
 before_script:
-  - docker exec registry-cli cc-test-reporter before-build --debug
+  - docker exec registry-cli cc-test-reporter before-build
   - docker pull alpine && docker tag alpine localhost:5000/alpine:test && docker push localhost:5000/alpine:test
 
 script:
@@ -28,7 +28,7 @@ script:
   - docker exec registry-cli composer test:functional
 
 after_script:
-  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then docker exec registry-cli cc-test-reporter after-build --debug -t clover --exit-code $TRAVIS_TEST_RESULT; fi
+  - docker exec registry-cli cc-test-reporter after-build --debug -t clover
 
 deploy:
   skip_cleanup: true

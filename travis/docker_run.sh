@@ -13,7 +13,10 @@ docker run -d --name registry-cli --network registry \
     -e CC_TEST_REPORTER_ID="${CC_REPORTER_ID}" \
     -e TRAVIS \
     -e TRAVIS_PULL_REQUEST \
+    -e TRAVIS_PULL_REQUEST_BRANCH \
+    -e TRAVIS_PULL_REQUEST_SHA \
     -e TRAVIS_JOB_ID \
     -e TRAVIS_BRANCH \
     -e TRAVIS_COMMIT \
+    -e GIT_COMMITTED_AT \
     "${TRAVIS_REPO_SLUG}" -f /dev/null
