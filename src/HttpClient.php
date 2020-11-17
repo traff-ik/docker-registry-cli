@@ -23,6 +23,7 @@ use function Amp\call;
 /**
  * Class Http.
  *
+ * HTTP client wrapper.
  */
 final class HttpClient
 {
@@ -32,11 +33,26 @@ final class HttpClient
 
     private DelegateHttpClient $client;
 
+    /**
+     * HttpClient constructor.
+     *
+     * @param \Amp\Http\Client\DelegateHttpClient $client HTTP-client.
+     *
+     */
     public function __construct(DelegateHttpClient $client)
     {
         $this->client = $client;
     }
 
+    /**
+     * Send request to the registry service.
+     *
+     * @param string $url     URL.
+     * @param string $method  HTTP request method.
+     * @param array  $headers HTTP request headers.
+     *
+     * @return \Amp\Promise<\Amp\Http\Client\Response>
+     */
     public function send(string $url, string $method, array $headers = []): Promise
     {
         return call(

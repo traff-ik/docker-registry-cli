@@ -35,6 +35,15 @@ final class Registry
 
     private ?ImageFactoryInterface $image_factory;
 
+    /**
+     * Registry constructor.
+     *
+     * @param string                                        $url           Registry URL.
+     * @param \Traff\Registry\HttpClient                    $http_client   HTTP-client.
+     * @param \Psr\Log\LoggerInterface                      $logger        Logger.
+     * @param \Traff\Registry\Factory\ImageFactoryInterface $image_factory Image object factory.
+     *
+     */
     public function __construct(
         string $url,
         HttpClient $http_client,
@@ -47,6 +56,15 @@ final class Registry
         $this->logger = $logger;
     }
 
+    /**
+     * Delete image by tag.
+     *
+     * @param string      $image_name Image name.
+     * @param string|null $tag        Tag name.
+     *                                Tag name is "latest" by default if not provided.
+     *
+     * @return \Amp\Promise<\Traff\Registry\ImageInterface>
+     */
     public function deleteTag(string $image_name, ?string $tag = null): Promise
     {
         return call(
@@ -105,9 +123,9 @@ final class Registry
     }
 
     /**
-     * getResponseError.
+     * Format response error.
      *
-     * @param string $body
+     * @param string $body Response body.
      *
      * @throws \JsonException
      * @return string
@@ -118,9 +136,9 @@ final class Registry
     }
 
     /**
-     * getResponseBody.
+     * Prepare response.
      *
-     * @param string $body
+     * @param string $body Response body.
      *
      * @throws \JsonException
      * @return array
@@ -130,6 +148,13 @@ final class Registry
         return \json_decode($body, true, 512, JSON_THROW_ON_ERROR);
     }
 
+    /**
+     * Return prepared URL.
+     *
+     * @param string $path Initial URL path.
+     *
+     * @return string
+     */
     private function getUrl(string $path): string
     {
         return \sprintf('%s/%s/%s', \rtrim($this->url, '/'), self::VERSION, \rtrim($path, '/'));

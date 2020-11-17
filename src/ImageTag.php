@@ -39,17 +39,13 @@ final class ImageTag implements ImageTagInterface
         $this->digest = $digest;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function withDigest(string $digest): ImageTagInterface
     {
         $new = clone $this;
@@ -58,17 +54,13 @@ final class ImageTag implements ImageTagInterface
         return $new;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function getDigest(): ?string
     {
         return $this->digest;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function __toString(): string
     {
         return $this->name;

@@ -41,9 +41,7 @@ class ClImateHandler extends AbstractProcessingHandler
 
     private CLImateLogger $logger;
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function __construct(CLImateLogger $logger, $level = Logger::DEBUG, bool $bubble = true)
     {
         parent::__construct($level, $bubble);
@@ -51,9 +49,7 @@ class ClImateHandler extends AbstractProcessingHandler
         $this->logger = $logger;
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     protected function write(array $record): void
     {
         $this->logger->log($this->convertLogLevel($record['level']), $record['formatted']);

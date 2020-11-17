@@ -20,9 +20,7 @@ namespace Traff\Registry\Logger;
  */
 class LineFormatter extends \Monolog\Formatter\LineFormatter
 {
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function __construct(
         ?string $format = null,
         ?string $dateFormat = null,
@@ -32,9 +30,7 @@ class LineFormatter extends \Monolog\Formatter\LineFormatter
         parent::__construct($format, $dateFormat, $allowInlineLineBreaks, $ignoreEmptyContextAndExtra);
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     public function format(array $record): string
     {
         foreach ($record['context'] as $key => $value) {
