@@ -1,7 +1,7 @@
 .git
 .idea
-/vendor/
-/build/
+vendor
+build
 clover.xml
 .phpunit.result*
 cc-test-reporter
