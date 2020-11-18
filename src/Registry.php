@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Traff\Registry;
 
+use Amp\Http\Client\Response;
 use Amp\Promise;
 use Psr\Log\LoggerInterface;
 use Traff\Registry\Factory\ImageFactoryInterface;
@@ -27,9 +28,15 @@ final class Registry
 {
     public const VERSION = 'v2';
 
+    private const CODE_NOT_FOUND = 404;
+
+    private const CODE_NOT_ALLOWED = 405;
+
+    private const CODE_SUCCESS = 200;
+
     private string $url;
 
-    private HttpClient $http_client;
+    private HttpClientInterface $http_client;
 
     private LoggerInterface $logger;
 
@@ -39,14 +46,13 @@ final class Registry
      * Registry constructor.
      *
      * @param string                                        $url           Registry URL.
-     * @param \Traff\Registry\HttpClient                    $http_client   HTTP-client.
+     * @param \Traff\Registry\HttpClientInterface           $http_client   HTTP-client.
      * @param \Psr\Log\LoggerInterface                      $logger        Logger.
      * @param \Traff\Registry\Factory\ImageFactoryInterface $image_factory Image object factory.
-     *
      */
     public function __construct(
         string $url,
-        HttpClient $http_client,
+        HttpClientInterface $http_client,
         LoggerInterface $logger,
         ImageFactoryInterface $image_factory
     ) {
@@ -54,6 +60,54 @@ final class Registry
         $this->url = $url;
         $this->image_factory = $image_factory;
         $this->logger = $logger;
+    }
+
+    /**
+     * getTagDigest.
+     *
+     * @param string      $image_name
+     * @param string|null $tag
+     *
+     * @return \Amp\Promise<\Traff\Registry\ImageInterface>
+     */
+    public function getTagDigest(string $image_name, ?string $tag = null): Promise
+    {
+        return call(
+            function () use ($image_name, $tag): \Generator {
+                $image = $this->image_factory->createImage($image_name, $tag);
+
+                if (null === $image->getTag()) {
+                    throw new \Error(\sprintf('Image tag must be provided for %s', $image));
+                }
+
+                $path = \sprintf('%s/manifests/%s', $image->getName(), $image->getTag());
+
+                $this->logger->debug('Retrieving digest for the {image}', ['image' => $image, 'path' => $path]);
+
+                $response = yield $this->http_client->send($this->getUrl($path), 'HEAD');
+
+                try {
+                    $this->handleResponse($response);
+                } catch (\Error $e) {
+                    if (self::CODE_NOT_FOUND === $e->getCode()) {
+                        throw new \Error(\
+                            sprintf('Image %s not found in the repository', $image), self::CODE_NOT_FOUND,
+                            $e
+                        );
+                    }
+                }
+
+                $tag_digest = $response->getHeader('Docker-Content-Digest');
+
+                if (empty($tag_digest)) {
+                    throw new \Error(\sprintf('Tag digest not found for the %s', $image));
+                }
+
+                $this->logger->debug('Received digest "{digest}"', ['digest' => $tag_digest]);
+
+                return $image->withTag($image->getTag()->withDigest($tag_digest));
+            }
+        );
     }
 
     /**
@@ -69,57 +123,42 @@ final class Registry
     {
         return call(
             function () use ($image_name, $tag): \Generator {
-                $image = $this->image_factory->createImage($image_name, $tag);
+                $image = yield $this->getTagDigest($image_name, $tag);
 
-                $this->logger->info('Deleting the image {image}', ['image' => $image]);
-
-                if (null === $image->getTag()) {
-                    $image = $image->withTag($this->image_factory->createTag(ImageTag::DEFAULT_TAG_NAME));
-                }
-
-                $path = \sprintf('%s/manifests/%s', $image->getName(), $image->getTag());
-
-                $this->logger->debug('Getting digest for the {image}', ['image' => $image, 'path' => $path]);
-
-                $response = yield $this->http_client->send($this->getUrl($path), 'HEAD');
-                $tag_digest = $response->getHeader('Docker-Content-Digest');
-
-                $this->logger->debug('Got digest for the "{digest}"', ['digest' => $tag_digest]);
-
-                if (404 === $response->getStatus()) {
-                    throw new \Error(\sprintf('Tag %s not found in the registry', $image));
-                }
-                if (200 !== $response->getStatus()) {
-                    throw new \Error($this->getResponseError(yield $response->getBody()->buffer()));
-                }
-
-                if (empty($tag_digest)) {
-                    throw new \Error(\sprintf('Tag digest not found for the %s', $image));
-                }
-
-                $path = \sprintf('%s/manifests/%s', $image->getName(), $tag_digest);
+                $path = \sprintf('%s/manifests/%s', $image->getName(), $image->getTag()->getDigest());
 
                 $this->logger->debug('Sending delete request {path}', ['path' => $path]);
                 $response = yield $this->http_client->send($this->getUrl($path), 'DELETE');
 
-                if (405 === $response->getStatus()) {
-                    throw new \Error(
-                        'Method not allowed. May be you need to allow your registry to delete tags: see https://docs.docker.com/registry/configuration/#delete'
-                    );
-                }
-                if ($response->getStatus() >= 400) {
-                    throw new \Error($this->getResponseError(yield $response->getBody()->buffer()));
-                }
-                if (202 !== $response->getStatus()) {
-                    throw new \Error($response->getReason());
-                }
+                $this->handleResponse($response);
 
                 $this->logger->info('Request was succeeded');
 
-                $tag = $image->getTag()->withDigest($tag_digest);
-                return $image->withTag($tag);
+                return $image;
             }
         );
+    }
+
+    private function handleResponse(Response $response): \Generator
+    {
+        $body = (string) (yield $response->getBody()->buffer());
+
+        if (self::CODE_NOT_ALLOWED === $response->getStatus()) {
+            throw new \Error(
+                'Method not allowed. May be you need to allow your registry to delete tags: '
+                . 'see https://docs.docker.com/registry/configuration/#delete'
+            );
+        }
+
+        if ($response->getStatus() >= 400) {
+            throw new \Error($this->getResponseError($body), $response->getStatus());
+        }
+
+        if (self::CODE_SUCCESS !== $response->getStatus()) {
+            throw new \Error($this->getResponseError($body), $response->getStatus());
+        }
+
+        return $this->getResponseBody($body);
     }
 
     /**

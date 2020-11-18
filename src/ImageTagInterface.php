@@ -20,6 +20,8 @@ namespace Traff\Registry;
  */
 interface ImageTagInterface
 {
+    public const DEFAULT_TAG_NAME = 'latest';
+
     /**
      * Return tag name.
      *

@@ -39,7 +39,10 @@ final class ImageFactory implements ImageFactoryInterface
             [$image_name, $tag] = \explode(':', $image_name, 2);
         }
 
-        return new Image($image_name, null !== $tag ? $this->createTag($tag) : null);
+        return new Image(
+            $image_name,
+            null !== $tag ? $this->createTag($tag) : $this->createTag(ImageTagInterface::DEFAULT_TAG_NAME)
+        );
     }
 
     /**

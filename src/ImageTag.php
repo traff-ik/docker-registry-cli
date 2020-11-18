@@ -20,8 +20,6 @@ namespace Traff\Registry;
  */
 final class ImageTag implements ImageTagInterface
 {
-    public const DEFAULT_TAG_NAME = 'latest';
-
     private ?string $digest;
 
     private string $name;

@@ -38,11 +38,17 @@ $args = [
         'noValue' => true,
         'description' => 'Delete the image'
     ],
-    'image' => [
-        'prefix' => 'i',
-        'longPrefix' => 'image',
-        'description' => 'Image IMAGE[:TAG]',
+    'tag' => [
+        'prefix' => 't',
+        'longPrefix' => 'tag',
+        'description' => 'Image with tag IMAGE[:TAG] (tag :latest by default)',
         'castTo' => 'string',
+    ],
+    'info' => [
+        'prefix' => 'i',
+        'longPrefix' => 'info',
+        'description' => 'Some information',
+        'noValue' => true,
     ]
 ];
 
@@ -58,7 +64,7 @@ try {
     exit(1);
 }
 
-if (count($argv) < 2 || $climate->arguments->defined('help')) {
+if (count($argv) < 3 || $climate->arguments->defined('help')) {
     $climate->usage();
     exit(0);
 }
@@ -98,33 +104,38 @@ $logger->debug('Set registry URL as {url}', ['url' => $registry_url]);
 Loop::defer(
     static function () use ($verbose, &$climate, &$registry): Generator {
         try {
-            if ($climate->arguments->defined('delete')) {
-                if (! $climate->arguments->defined('image')) {
-                    $climate->to('error')->error('Image name must be provided. Use "-i" or "--image" argument');
-                    exit(1);
+            try {
+                if ($climate->arguments->defined('delete')) {
+                    if (! $climate->arguments->defined('tag')) {
+                        $climate->to('error')->error('Image name must be provided. Use "-t" or "--tag" argument');
+                        exit(1);
+                    }
+
+                    yield $registry->deleteTag($climate->arguments->get('tag'));
+                } elseif ($climate->arguments->defined('info')) {
+                    if ($climate->arguments->defined('tag')) {
+                        $image = yield $registry->getTagDigest($climate->arguments->get('tag'));
+
+                        $data = [
+                            [
+                                'Image',
+                                'Tag Digest',
+                            ],
+                            [
+                                (string) $image,
+                                (string) $image->getTag()->getDigest(),
+                            ],
+                        ];
+
+                        $climate->table($data);
+                    }
                 }
-
-                $image_name = $climate->arguments->get('image');
-
-                if (empty($image_name)) {
-                    $climate->to('error')->error('Image name must be provided');
-                    exit(1);
-                }
-
-                try {
-                    $image = yield $registry->deleteTag($image_name);
-                } catch (Error $e) {
-                    $climate->to('error')->error($e->getMessage());
-                    exit(1);
-                }
-
-                if (! $image->getTag()->getDigest()) {
-                    $climate->to('error')->error('Can\'t get the image tag digest');
-                    exit(1);
-                }
-
-                exit(0);
+            } catch (Error $e) {
+                $climate->to('error')->error($e->getMessage());
+                exit(((int) $e->getCode()) ?: 1);
             }
+
+            exit(0);
         } catch (Throwable $e) {
             if ($verbose) {
                 throw $e;
