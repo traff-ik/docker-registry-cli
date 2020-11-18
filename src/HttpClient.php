@@ -25,7 +25,7 @@ use function Amp\call;
  *
  * HTTP client wrapper.
  */
-final class HttpClient
+final class HttpClient implements HttpClientInterface
 {
     private const HEADERS = [
         'Accept' => 'application/vnd.docker.distribution.manifest.v2+json',
@@ -44,15 +44,7 @@ final class HttpClient
         $this->client = $client;
     }
 
-    /**
-     * Send request to the registry service.
-     *
-     * @param string $url     URL.
-     * @param string $method  HTTP request method.
-     * @param array  $headers HTTP request headers.
-     *
-     * @return \Amp\Promise<\Amp\Http\Client\Response>
-     */
+    /** @inheritDoc */
     public function send(string $url, string $method, array $headers = []): Promise
     {
         return call(
