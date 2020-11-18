@@ -32,4 +32,4 @@ COPY bin/ ./bin
 COPY src/ ./src
 RUN chmod -R +x /usr/lib/registry/bin
 
-ENTRYPOINT [ "/usr/lib/registry/bin/registry" ]
+ENTRYPOINT ["/usr/lib/registry/bin/registry"]
