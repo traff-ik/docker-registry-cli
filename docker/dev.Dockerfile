@@ -12,6 +12,12 @@ RUN apk add --no-cache \
 # PHP configuration
 
 COPY ./docker/php/php.ini "${PHP_INI_DIR}"/php.ini
+COPY ./docker/php/conf.d.dev "${PHP_INI_DIR}"/conf.d
+
+# PHP extensions
+
+RUN install-php-extensions \
+    xdebug
 
 # Composer
 
@@ -21,21 +27,17 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" &&
 
 # Working directory
 
-RUN adduser --home /usr/lib/registry --disable-password --uid 1001 --shell /bin/ash registry
-
-USER registry
-
 WORKDIR /usr/lib/registry
 
-COPY --chown=registry composer.json composer.lock ./
+COPY composer.json composer.lock ./
 
 RUN composer check-platform-reqs \
-    && composer install --no-dev
+    && composer -V
 
 # Project files
 
-COPY --chown=registry bin/ ./bin
-COPY --chown=registry src/ ./src
+COPY bin/ ./bin
+COPY src/ ./src
 RUN chmod -R +x /usr/lib/registry/bin
 
 ENTRYPOINT ["/usr/lib/registry/bin/cli"]

@@ -13,14 +13,20 @@ declare(strict_types=1);
 
 namespace Traff\Registry;
 
+use Amp\Promise;
+
 /**
- * Interface ImageInterface.
+ * Interface ImageTagInterface.
  *
  * @package Traff\Registry
  */
-interface ImageInterface extends \Stringable
+interface TagInterface extends \Stringable
 {
+    public const DEFAULT_NAME = 'latest';
+
     public function getName(): string;
 
-    public function createTag(string $name): TagInterface;
+    public function getDigest(): Promise;
+
+    public function delete(): Promise;
 }

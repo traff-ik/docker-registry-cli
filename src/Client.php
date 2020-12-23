@@ -13,14 +13,16 @@ declare(strict_types=1);
 
 namespace Traff\Registry;
 
+use Amp\Promise;
+
 /**
- * Interface ImageInterface.
+ * Interface RegistryInterface.
  *
  * @package Traff\Registry
  */
-interface ImageInterface extends \Stringable
+interface Client
 {
-    public function getName(): string;
+    public function version(): string;
 
-    public function createTag(string $name): TagInterface;
+    public function request(string $path, string $method): Promise;
 }

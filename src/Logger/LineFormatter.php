@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Traff\Registry\Logger;
 
+use Traff\Registry\Logger\Traits\Formatter;
+
 /**
  * Class LineFormatter.
  *
@@ -20,6 +22,8 @@ namespace Traff\Registry\Logger;
  */
 class LineFormatter extends \Monolog\Formatter\LineFormatter
 {
+    use Formatter;
+
     /** @inheritDoc */
     public function __construct(
         ?string $format = null,
@@ -33,14 +37,6 @@ class LineFormatter extends \Monolog\Formatter\LineFormatter
     /** @inheritDoc */
     public function format(array $record): string
     {
-        foreach ($record['context'] as $key => $value) {
-            $placeholder = \sprintf('{%s}', $key);
-            if (false !== \strpos($record['message'], $placeholder)) {
-                $record['message'] = \str_replace($placeholder, $value, $record['message']);
-                unset($record['context'][$key]);
-            }
-        }
-
-        return parent::format($record);
+        return parent::format($this->replacePlaceholders($record));
     }
 }

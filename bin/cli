@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+/**
+ * Created by IntelliJ IDEA.
+ *
+ * PHP version 7.3
+ *
+ * @category docker-registry-cli
+ * @author   Oleg Tikhonov <to@toro.one>
+ */
+
+declare(strict_types=1);
+
+error_reporting(E_ALL);
+
+require dirname(__DIR__) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
+ 
+$app = new \Symfony\Component\Console\Application('docker-registry', '0.1.0');
+
+$app->addCommands(
+    [
+        new \Traff\Registry\Command\TagInfoCommand(),
+        new \Traff\Registry\Command\TagDeleteCommand(),
+    ]
+);
+
+$app->run();

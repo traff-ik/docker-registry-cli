@@ -13,19 +13,20 @@
   "config": {
     "optimize-autoloader": true,
     "platform": {
-      "php": "7.4"
+      "php": "8.0"
     },
     "process-timeout": 0,
     "sort-packages": true
   },
   "require": {
-    "php": ">=7.4",
+    "php": ">=8.0",
+    "ext-json": "*",
     "amphp/amp": "^2.5",
     "amphp/http-client": "^4.5",
-    "ext-json": "*",
-    "league/climate": "^3.6",
+    "amphp/log": "^1.1",
     "monolog/monolog": "^2.1",
-    "psr/log": "^1.1"
+    "psr/log": "^1.1",
+    "symfony/console": "^5.2"
   },
   "require-dev": {
     "amphp/phpunit-util": "^1.4",
@@ -36,7 +37,10 @@
   "autoload": {
     "psr-4": {
       "Traff\\Registry\\": "src/"
-    }
+    },
+    "files": [
+      "src/functions.php"
+    ]
   },
   "autoload-dev": {
     "psr-4": {
